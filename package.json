@@ -6,14 +6,16 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "core-js": "^3.13.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "regenerator-runtime": "^0.13.7",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -36,6 +38,8 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^5.0.0."
+    "node-sass": "^5.0.0.",
+    "react-app-rewired": "^2.1.5",
+    "worker-plugin": "^5.0.1"
   }
 }

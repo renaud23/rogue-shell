@@ -1,13 +1,38 @@
-import { createInterpreter, validate, tokenize } from "../../interpreter";
+// eslint-disable-next-line
+// import InterpreteWorker from "./execute.worker";
+import { createInterpreter, validate, tokenizer } from "../../interpreter";
 import execute from "./execute";
 
 const interprete = createInterpreter(validate, execute);
 
-function compute(row) {
+export function isWorkerCompatible() {
+  if (window.Worker) {
+    return true;
+  }
+  return false;
+}
+
+function withWorker(row) {
+  const WORKER = new Worker("./execute.worker", { type: "module" }); //new InterpreteWorker();
+
+  return new Promise(function (resolve) {
+    WORKER.postMessage(row);
+    WORKER.addEventListener("message", function (e) {
+      const { data } = e;
+      resolve(data);
+    });
+  });
+}
+
+async function compute(row) {
   try {
-    return interprete(tokenize(row));
+    if (isWorkerCompatible()) {
+      return withWorker(row);
+    }
+    return interprete(tokenizer(row));
   } catch (e) {
-    return e;
+    console.error(e);
+    return e.message;
   }
 }
 
