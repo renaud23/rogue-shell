@@ -1,0 +1,1 @@
+export { interprete } from "./commands";

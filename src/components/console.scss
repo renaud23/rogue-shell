@@ -1,0 +1,33 @@
+.console {
+  input,
+  ul,
+  li,
+  div,
+  span {
+    margin: 0;
+    padding: 0;
+    border: none;
+    line-height: 1em;
+    list-style: none;
+    background-color: transparent;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  height: 250px;
+  width: 500px;
+  background-color: #202000;
+  color: beige;
+  input {
+    color: beige;
+    width: 95%;
+    font-family: monospace;
+  }
+  .prompt {
+    width: 5%;
+    color: khaki;
+    margin-right: 2px;
+    font-family: monospace;
+  }
+}
