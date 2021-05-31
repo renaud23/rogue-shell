@@ -11,13 +11,16 @@ const COMMANDS = {
       "-right": { required: false, min: 0, max: 1 },
     },
   },
+  help: {
+    params: {},
+  },
 };
 
 function validate(tree) {
   const { command, params } = tree;
   /* is existing command */
   if (!(command in COMMANDS)) {
-    throw new Error(`Commande inconnue ${command}`);
+    throw new Error(`Commande non implémentée ${command}`);
   }
   const { params: dico, min, max } = COMMANDS[command];
   /*  params required */

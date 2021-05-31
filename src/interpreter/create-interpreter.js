@@ -20,7 +20,7 @@ function buildAST(tokens) {
           };
         }
 
-        throw new Error("Ligne doit commencer par une commande !");
+        throw new Error("La ligne doit commencer par une commande !");
       } else {
         const { type, value } = token;
         if (expect && expect.indexOf(type) === -1) {
@@ -56,7 +56,7 @@ function buildAST(tokens) {
             };
 
           default:
-            throw new Error(`type non reconnu ${type}`);
+            throw new Error(`Type non reconnu ${type}`);
         }
       }
     },

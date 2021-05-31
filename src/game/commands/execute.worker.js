@@ -9,7 +9,8 @@ self.onmessage = function (e) {
     const interprete = createInterpreter(validate, execute);
     const response = interprete(tokenizer(e.data));
     self.postMessage(response);
-  } catch ({ message }) {
-    self.postMessage(message);
+  } catch (e) {
+    console.error(e);
+    self.postMessage(e.message);
   }
 };

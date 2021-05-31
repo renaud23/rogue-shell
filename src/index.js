@@ -1,7 +1,11 @@
 import React, { useState, useCallback } from "react";
 import ReactDom from "react-dom";
-import { Console } from "./components";
+import { Console, Canvas } from "./components";
 import { interprete } from "./game";
+import { createLevel } from "./game";
+import levelRenderer from "./components/level-renderer";
+
+const level = createLevel(50, 50);
 
 function App() {
   const [rows, setRows] = useState(["Hello!!!"]);
@@ -10,8 +14,7 @@ function App() {
     function (row) {
       async function launch() {
         const response = await interprete(row);
-        console.log(response);
-        // setRows([...rows, response]);
+        setRows([...rows, response]);
       }
 
       launch();
@@ -19,8 +22,13 @@ function App() {
     [rows]
   );
 
+  function render(offscreen) {
+    levelRenderer(offscreen, level);
+  }
+
   return (
     <div className="application">
+      <Canvas width={200} height={200} render={render} />
       <Console rows={rows} onEnter={onEnter} />
     </div>
   );
