@@ -3,13 +3,16 @@ import ReactDom from "react-dom";
 import { Console, Canvas } from "./components";
 import { interprete } from "./game";
 import { createLevel } from "./game";
-import levelRenderer from "./components/level-renderer";
+import levelRenderer from "./components/level-view-renderer";
 
-const SIZE = 30;
+const MAZE_SIZE = 101;
 const TILE_SIZE = 32;
+const FOV = 5;
+const VIEW_SIZE = (FOV * 2 + 1) * TILE_SIZE;
 const SCALE = 0.5;
 
-const level = createLevel(SIZE, SIZE);
+const level = createLevel(MAZE_SIZE, MAZE_SIZE);
+const view = { position: Math.trunc((MAZE_SIZE * MAZE_SIZE) / 2), fov: FOV };
 
 function App() {
   const [rows, setRows] = useState(["Hello!!!"]);
@@ -27,14 +30,14 @@ function App() {
   );
 
   function render(offscreen) {
-    levelRenderer(offscreen, level);
+    levelRenderer(offscreen, level, view);
   }
 
   return (
     <div className="application">
       <Canvas
-        width={TILE_SIZE * SIZE * SCALE}
-        height={TILE_SIZE * SIZE * SCALE}
+        width={VIEW_SIZE * SCALE}
+        height={VIEW_SIZE * SCALE}
         render={render}
       />
       <Console rows={rows} onEnter={onEnter} />

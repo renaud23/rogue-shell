@@ -1,20 +1,10 @@
-import { createTexture } from "../components/rendering";
-import { DUNGEON_TILES, isEastWall } from "../tools";
-
-const texture = createTexture(`${window.location.origin}/texture.png`);
-
-function computeCoord(index, width) {
-  return [index % width, Math.trunc(index / width)];
-}
-
-function getTextCoord(code) {
-  return computeCoord(code - 1, 4);
-}
+import { TEXTURE_WALL, getTextCoords } from "./render-tools";
+import { DUNGEON_TILES } from "../tools";
 
 function draw(offscreen, tile, size, x, y) {
-  const [tx, ty] = getTextCoord(tile);
+  const [tx, ty] = getTextCoords(tile);
   offscreen.drawTexture(
-    texture,
+    TEXTURE_WALL,
     tx * 32,
     ty * 32,
     32,
@@ -45,7 +35,8 @@ function render(offscreen, level) {
     const isWest = DUNGEON_TILES.isWestWall(tile);
 
     const isNorthEastWall =
-      Math.trunc(i / width) - 1 >= 0 && isEastWall(data[i - width]);
+      Math.trunc(i / width) - 1 >= 0 &&
+      DUNGEON_TILES.isEastWall(data[i - width]);
 
     if (isNorth) {
       draw(offscreen, DUNGEON_TILES.NORTH_WALL, tileSize, x, y);
