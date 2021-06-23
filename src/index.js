@@ -1,8 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import ReactDom from "react-dom";
 import { Console, Canvas } from "./components";
-import { createInterpreter } from "./game";
-import { createLevel } from "./game";
+import { createInterpreter, activate, createLevel } from "./game";
 import levelRenderer from "./components/level-view-renderer";
 
 const MAZE_SIZE = 101;
@@ -14,7 +13,19 @@ const SCALE = 0.5;
 const level = createLevel(MAZE_SIZE, MAZE_SIZE);
 const view = { position: Math.trunc((MAZE_SIZE * MAZE_SIZE) / 2), fov: FOV };
 const world = { player: { view }, level };
+
 const interpreter = createInterpreter(world);
+
+function startLoop(w) {
+  let on = false;
+  return window.setInterval(function () {
+    if (!on) {
+      on = true;
+      activate(w);
+      on = false;
+    }
+  }, 50);
+}
 
 function App() {
   const [rows, setRows] = useState(["Hello!!!"]);
@@ -34,6 +45,10 @@ function App() {
   function render(offscreen) {
     levelRenderer(offscreen, level, world);
   }
+
+  useEffect(function () {
+    startLoop(world);
+  }, []);
 
   return (
     <div className="application">
