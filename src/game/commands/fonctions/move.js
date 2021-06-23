@@ -1,5 +1,5 @@
-function move(params) {
-  console.log("move", params);
+function move(params, world) {
+  console.log("move", params, world);
   return 200;
 }
 

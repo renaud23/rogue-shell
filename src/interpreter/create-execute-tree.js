@@ -1,8 +1,8 @@
 function create(commands) {
-  return function (tree) {
+  return function (tree, ...args) {
     const { command, params } = tree;
     if (typeof commands[command] === "function") {
-      return commands[command](params);
+      return commands[command](params, ...args);
     }
   };
 }

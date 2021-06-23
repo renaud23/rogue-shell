@@ -3,7 +3,7 @@
 import { createInterpreter, validate, tokenizer } from "../../interpreter";
 import execute from "./execute";
 
-const interprete = createInterpreter(validate, execute);
+const interpreter = createInterpreter(validate, execute);
 
 export function isWorkerCompatible() {
   if (window.Worker) {
@@ -12,11 +12,11 @@ export function isWorkerCompatible() {
   return false;
 }
 
-function withWorker(row) {
+function withWorker(row, world) {
   const WORKER = new Worker("./execute.worker", { type: "module" }); //new InterpreteWorker();
 
   return new Promise(function (resolve) {
-    WORKER.postMessage(row);
+    WORKER.postMessage({ row, world });
     WORKER.addEventListener("message", function (e) {
       const { data } = e;
       resolve(data);
@@ -24,16 +24,18 @@ function withWorker(row) {
   });
 }
 
-async function compute(row) {
-  try {
-    if (isWorkerCompatible()) {
-      return withWorker(row);
+function create(world) {
+  return async function compute(row) {
+    try {
+      if (isWorkerCompatible()) {
+        return withWorker(row, world);
+      }
+      return interpreter(tokenizer(row), world);
+    } catch (e) {
+      console.error(e);
+      return e.message;
     }
-    return interprete(tokenizer(row));
-  } catch (e) {
-    console.error(e);
-    return e.message;
-  }
+  };
 }
 
-export default compute;
+export default create;

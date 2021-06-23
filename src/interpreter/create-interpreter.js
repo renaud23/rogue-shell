@@ -65,12 +65,12 @@ function buildAST(tokens) {
   return { command, params };
 }
 
-function createExecute(validate, execute) {
-  return function (tokens) {
+function create(validate, execute) {
+  return function interpreter(tokens, ...args) {
     const tree = buildAST(tokens);
     validate(tree);
-    return execute(tree);
+    return execute(tree, ...args);
   };
 }
 
-export default createExecute;
+export default create;

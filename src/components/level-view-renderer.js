@@ -69,7 +69,9 @@ function drawTile(offscreen, tile, tileSize, x, y, isNorthEastWall, isPlayer) {
   }
 }
 
-function render(offscreen, level, view) {
+function render(offscreen, level, world) {
+  const { player } = world;
+  const { view } = player;
   const { position, fov } = view;
   const viewNbTiles = fov * 2 + 1;
   const { width, data } = level;
