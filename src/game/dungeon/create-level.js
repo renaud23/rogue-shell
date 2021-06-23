@@ -1,34 +1,32 @@
-import {
-  GROUND,
-  WEST_WALL,
-  EAST_WALL,
-  NORTH_WALL,
-  SOUTH_WALL,
-} from "../common-tools";
+import carveMaze from "./carve-maze";
 
 function create(width, height) {
-  return {
-    width,
-    height,
-    data: new Array(width * height).fill(GROUND).map(function (code, i) {
-      let next = code;
-      const row = Math.trunc(i / width);
-      const column = i % width;
-      if (column === 0) {
-        next |= WEST_WALL;
-      }
-      if (column === width - 1) {
-        next |= EAST_WALL;
-      }
-      if (row === 0) {
-        next |= NORTH_WALL;
-      }
-      if (row === height - 1) {
-        next |= SOUTH_WALL;
-      }
-      return next;
-    }),
-  };
+  return carveMaze(width, height);
+
+  // return {
+  //   width,
+  //   height,
+  //   data: new Array(height * width)
+  //     .fill(DUNGEON_TILES.GROUND)
+  //     .map(function (code, i) {
+  //       let next = code;
+  //       const row = Math.trunc(i / width);
+  //       const column = i % width;
+  //       if (column === 0) {
+  //         next |= DUNGEON_TILES.WEST_WALL;
+  //       }
+  //       if (column === width - 1) {
+  //         next |= DUNGEON_TILES.EAST_WALL;
+  //       }
+  //       if (row === 0) {
+  //         next |= DUNGEON_TILES.NORTH_WALL;
+  //       }
+  //       if (row === height - 1) {
+  //         next |= DUNGEON_TILES.SOUTH_WALL;
+  //       }
+  //       return next;
+  //     }),
+  // };
 }
 
 export default create;

@@ -1,16 +1,5 @@
 import { createTexture } from "../components/rendering";
-import {
-  isNorthWall,
-  NORTH_WALL,
-  WEST_WALL,
-  isWestWall,
-  isEastWall,
-  EAST_WALL,
-  isSouthWall,
-  SOUTH_WALL,
-  isGround,
-  GROUND,
-} from "../game";
+import { DUNGEON_TILES, isEastWall } from "../tools";
 
 const texture = createTexture(`${window.location.origin}/texture.png`);
 
@@ -26,10 +15,10 @@ function draw(offscreen, tile, size, x, y) {
   const [tx, ty] = getTextCoord(tile);
   offscreen.drawTexture(
     texture,
-    tx * 16,
-    ty * 16,
-    16,
-    16,
+    tx * 32,
+    ty * 32,
+    32,
+    32,
     x * size,
     y * size,
     size,
@@ -46,20 +35,55 @@ function render(offscreen, level) {
 
   data.forEach(function (tile, i) {
     const [x, y] = computeCoord(i, width);
-    if (isGround(tile)) {
-      draw(offscreen, GROUND, tileSize, x, y);
+    if (DUNGEON_TILES.isGround(tile)) {
+      draw(offscreen, DUNGEON_TILES.GROUND, tileSize, x, y);
     }
-    if (isNorthWall(tile)) {
-      draw(offscreen, NORTH_WALL, tileSize, x, y);
+
+    const isNorth = DUNGEON_TILES.isNorthWall(tile);
+    const isEast = DUNGEON_TILES.isEastWall(tile);
+    const isSouth = DUNGEON_TILES.isSouthWall(tile);
+    const isWest = DUNGEON_TILES.isWestWall(tile);
+
+    const isNorthEastWall =
+      Math.trunc(i / width) - 1 >= 0 && isEastWall(data[i - width]);
+
+    if (isNorth) {
+      draw(offscreen, DUNGEON_TILES.NORTH_WALL, tileSize, x, y);
     }
-    if (isWestWall(tile)) {
-      draw(offscreen, WEST_WALL, tileSize, x, y);
+
+    if (isEast) {
+      if (isNorthEastWall && !isNorth) {
+        draw(offscreen, DUNGEON_TILES.EAST_WALL, tileSize, x, y);
+      } else {
+        draw(offscreen, DUNGEON_TILES.EAST_ENDED_WALL, tileSize, x, y);
+      }
     }
-    if (isEastWall(tile)) {
-      draw(offscreen, EAST_WALL, tileSize, x, y);
+
+    if (isSouth) {
+      draw(offscreen, DUNGEON_TILES.SOUTH_WALL, tileSize, x, y);
     }
-    if (isSouthWall(tile)) {
-      draw(offscreen, SOUTH_WALL, tileSize, x, y);
+    if (isWest) {
+      draw(offscreen, DUNGEON_TILES.WEST_WALL, tileSize, x, y);
+    }
+
+    if (!isWest && !isSouth) {
+      draw(offscreen, DUNGEON_TILES.SOUTH_WEST_CORNER, tileSize, x, y);
+    }
+
+    if (!isNorth && !isWest) {
+      draw(offscreen, DUNGEON_TILES.NORTH_WEST_CORNER, tileSize, x, y);
+    }
+
+    if (!isSouth && !isEast) {
+      draw(offscreen, DUNGEON_TILES.SOUTH_EAST_CORNER, tileSize, x, y);
+    }
+
+    if (!isEast && !isNorth) {
+      if (isNorthEastWall) {
+        draw(offscreen, DUNGEON_TILES.NORTH_EAST_CORNER, tileSize, x, y);
+      } else {
+        draw(offscreen, DUNGEON_TILES.NORTH_EAST_END_CORNER, tileSize, x, y);
+      }
     }
   });
 }
