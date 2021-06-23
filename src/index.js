@@ -5,7 +5,11 @@ import { interprete } from "./game";
 import { createLevel } from "./game";
 import levelRenderer from "./components/level-renderer";
 
-const level = createLevel(50, 50);
+const SIZE = 30;
+const TILE_SIZE = 32;
+const SCALE = 0.5;
+
+const level = createLevel(SIZE, SIZE);
 
 function App() {
   const [rows, setRows] = useState(["Hello!!!"]);
@@ -28,7 +32,11 @@ function App() {
 
   return (
     <div className="application">
-      <Canvas width={200} height={200} render={render} />
+      <Canvas
+        width={TILE_SIZE * SIZE * SCALE}
+        height={TILE_SIZE * SIZE * SCALE}
+        render={render}
+      />
       <Console rows={rows} onEnter={onEnter} />
     </div>
   );
