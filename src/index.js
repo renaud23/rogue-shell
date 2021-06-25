@@ -41,7 +41,6 @@ function onKeyUp(e) {
       e.stopPropagation();
       e.preventDefault();
       QUEUE.push(moveUp, 1);
-
       break;
     case "ArrowDown":
       e.stopPropagation();

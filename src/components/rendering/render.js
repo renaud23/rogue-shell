@@ -32,15 +32,21 @@ function draw(offscreen, tile, size, x, y) {
   );
 }
 
-function drawTile(offscreen, tile, tileSize, x, y, isNorthEastWall, isPlayer) {
-  if (DUNGEON_TILES.isGround(tile)) {
+function drawTile(offscreen, tile, tileSize, x, y) {
+  const { code, isNorthEastWall, isPlayerPosition, isVisible } = tile;
+
+  if (!isVisible) {
+    return false;
+  }
+
+  if (DUNGEON_TILES.isGround(code)) {
     draw(offscreen, DUNGEON_TILES.GROUND, tileSize, x, y);
   }
 
-  const isNorth = DUNGEON_TILES.isNorthWall(tile);
-  const isEast = DUNGEON_TILES.isEastWall(tile);
-  const isSouth = DUNGEON_TILES.isSouthWall(tile);
-  const isWest = DUNGEON_TILES.isWestWall(tile);
+  const isNorth = DUNGEON_TILES.isNorthWall(code);
+  const isEast = DUNGEON_TILES.isEastWall(code);
+  const isSouth = DUNGEON_TILES.isSouthWall(code);
+  const isWest = DUNGEON_TILES.isWestWall(code);
 
   if (isNorth) {
     draw(offscreen, DUNGEON_TILES.NORTH_WALL, tileSize, x, y);
@@ -53,7 +59,7 @@ function drawTile(offscreen, tile, tileSize, x, y, isNorthEastWall, isPlayer) {
       draw(offscreen, DUNGEON_TILES.EAST_ENDED_WALL, tileSize, x, y);
     }
   }
-  if (isPlayer) {
+  if (isPlayerPosition) {
     drawPlayer(offscreen, tileSize, x, y);
   }
   if (isSouth) {
@@ -90,18 +96,10 @@ function render(offscreen, world) {
   const tileSize = Math.trunc(
     Math.min(canvasHeight / renderNbTiles, canvasWidth / renderNbTiles)
   );
-  tiles.forEach(function ({ code, isNorthEastWall, isPlayerPosition }, i) {
+  tiles.forEach(function (tile, i) {
     const [x, y] = computeCoords(i, renderNbTiles);
 
-    drawTile(
-      offscreen,
-      code,
-      tileSize,
-      x,
-      y,
-      isNorthEastWall,
-      isPlayerPosition
-    );
+    drawTile(offscreen, tile, tileSize, x, y);
   });
 }
 
