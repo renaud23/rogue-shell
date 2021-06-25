@@ -66,7 +66,7 @@ function buildAST(tokens) {
 }
 
 function create(validate, execute) {
-  return function interpreter(tokens, ...args) {
+  return function (tokens, ...args) {
     const tree = buildAST(tokens);
     validate(tree);
     return execute(tree, ...args);
