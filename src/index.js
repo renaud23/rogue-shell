@@ -2,19 +2,20 @@ import React, { useState, useCallback, useEffect } from "react";
 import ReactDom from "react-dom";
 import { Console, Canvas } from "./components";
 import { interpreter, activate, createLevel } from "./game";
-import levelRenderer from "./components/level-view-renderer";
+import levelRenderer from "./components/rendering/render";
 import QUEUE from "./game/player-queue";
 import { moveUp, moveDown, moveLeft, moveRight } from "./game/commands";
 
-const MAZE_SIZE = 11;
+const MAZE_SIZE = 101;
 const TILE_SIZE = 32;
 const FOV = 3;
-const VIEW_SIZE = (FOV * 2 + 1) * TILE_SIZE;
+const SCREEN_SIZE = 4;
+const VIEW_SIZE = (SCREEN_SIZE * 2 + 1) * TILE_SIZE;
 const SCALE = 1;
 
 const level = createLevel(MAZE_SIZE, MAZE_SIZE);
 const view = { position: Math.trunc((MAZE_SIZE * MAZE_SIZE) / 2), fov: FOV };
-const world = { player: { view }, level };
+const world = { player: { view }, level, screenSize: SCREEN_SIZE };
 
 let LOOP_ID;
 
@@ -80,7 +81,7 @@ function App() {
   );
 
   function render(offscreen) {
-    levelRenderer(offscreen, level, world);
+    levelRenderer(offscreen, world);
   }
 
   const appendRows = useCallback(

@@ -1,6 +1,7 @@
 import { TEXTURE_WALL, TEXTURE_PLAYER, getTextCoords } from "./render-tools";
-import { DUNGEON_TILES } from "../tools";
-import { computeCoords } from "../tools";
+import { DUNGEON_TILES, computeCoords } from "../../tools";
+import stepDungeon from "./step-dungeon";
+import stepPlayer from "./step-player";
 
 function drawPlayer(offscreen, size, x, y) {
   offscreen.drawTexture(
@@ -83,33 +84,24 @@ function drawTile(offscreen, tile, tileSize, x, y, isNorthEastWall, isPlayer) {
   }
 }
 
-function render(offscreen, level, world) {
-  const { player } = world;
-  const { view } = player;
-  const { position, fov } = view;
-  const viewNbTiles = fov * 2 + 1;
-  const { width, height, data } = level;
+function render(offscreen, world) {
   const { width: canvasWidth, height: canvasHeight } = offscreen;
+  const { tiles, renderNbTiles } = stepPlayer(stepDungeon(world), world);
   const tileSize = Math.trunc(
-    Math.min(canvasHeight / viewNbTiles, canvasWidth / viewNbTiles)
+    Math.min(canvasHeight / renderNbTiles, canvasWidth / renderNbTiles)
   );
-  const [vx, vy] = computeCoords(position, width);
-  const anchorTop = Math.min(Math.max(vy - fov, 0), height - viewNbTiles);
-  const anchorLeft = Math.min(Math.max(vx - fov, 0), width - viewNbTiles);
+  tiles.forEach(function ({ code, isNorthEastWall, isPlayerPosition }, i) {
+    const [x, y] = computeCoords(i, renderNbTiles);
 
-  new Array(viewNbTiles * viewNbTiles).fill(undefined).forEach(function (_, i) {
-    const [x, y] = computeCoords(i, viewNbTiles);
-    const lx = x + anchorLeft;
-    const ly = y + anchorTop;
-    const xy = lx + ly * width;
-    const tile = data[xy];
-
-    const isNorthEastWall =
-      Math.trunc(xy / width) - 1 >= 0 &&
-      DUNGEON_TILES.isEastWall(data[xy - width]);
-    const isPlayer = lx === vx && ly === vy;
-
-    drawTile(offscreen, tile, tileSize, x, y, isNorthEastWall, isPlayer);
+    drawTile(
+      offscreen,
+      code,
+      tileSize,
+      x,
+      y,
+      isNorthEastWall,
+      isPlayerPosition
+    );
   });
 }
 

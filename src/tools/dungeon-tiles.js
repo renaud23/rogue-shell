@@ -1,3 +1,4 @@
+export const UNKNOWN = -1;
 export const EMPTY = 0b0;
 export const NORTH_WALL = 0b0001; // 1
 export const SOUTH_WALL = 0b0010; // 2
@@ -40,6 +41,9 @@ export function isGround(code) {
 export function isEmpty(code) {
   return EMPTY & code;
 }
+export function isUnknown(code) {
+  return code === -1;
+}
 
 function openWall(code, wall) {
   return code & (code ^ wall);
@@ -68,5 +72,6 @@ export const DUNGEON_TILES = {
   isSouthWall,
   isNorthWall,
   isInnerCorner,
+  isUnknown,
   openWall,
 };

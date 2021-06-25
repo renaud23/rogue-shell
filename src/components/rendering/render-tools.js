@@ -1,4 +1,4 @@
-import { createTexture } from "../components/rendering";
+import { createTexture } from "./rendering";
 
 export const TEXTURE_WALL = createTexture(
   `${window.location.origin}/texture.png`

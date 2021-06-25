@@ -1,1 +1,0 @@
-function renderer(dungeon, offscreen) {}

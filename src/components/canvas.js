@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import createOffscreen from "./rendering";
+import createOffscreen from "./rendering/rendering";
 
 function Canvas({ width, height, render = () => null }) {
   const canvasEl = useRef(null);
