@@ -1,9 +1,9 @@
 const ACTIONS = [];
 
-function activate(world) {
+function activate(world, log) {
   if (ACTIONS.length) {
     const next = ACTIONS.shift();
-    const is = next(world);
+    const is = next(world, log);
     if (!is) {
       clear();
     }

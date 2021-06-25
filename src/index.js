@@ -14,12 +14,18 @@ const level = createLevel(MAZE_SIZE, MAZE_SIZE);
 const view = { position: Math.trunc((MAZE_SIZE * MAZE_SIZE) / 2), fov: FOV };
 const world = { player: { view }, level };
 
-function startLoop(w) {
+let LOOP_ID;
+
+function startLoop(w, appendRows) {
   let on = false;
-  return window.setInterval(function () {
+  if (LOOP_ID) {
+    window.clearInterval(LOOP_ID);
+  }
+
+  LOOP_ID = window.setInterval(function () {
     if (!on) {
       on = true;
-      activate(w);
+      activate(w, appendRows);
       on = false;
     }
   }, 50);
@@ -32,7 +38,9 @@ function App() {
     function (row) {
       async function launch() {
         const response = await interpreter(row);
-        setRows([...rows, response]);
+        if (response !== 200) {
+          setRows([...rows, response]);
+        }
       }
 
       launch();
@@ -44,9 +52,19 @@ function App() {
     levelRenderer(offscreen, level, world);
   }
 
-  useEffect(function () {
-    startLoop(world);
-  }, []);
+  const appendRows = useCallback(
+    function (messages) {
+      setRows([...rows, ...messages]);
+    },
+    [rows]
+  );
+
+  useEffect(
+    function () {
+      startLoop(world, appendRows);
+    },
+    [appendRows]
+  );
 
   return (
     <div className="application">
