@@ -88,14 +88,14 @@ function render(offscreen, level, world) {
   const { view } = player;
   const { position, fov } = view;
   const viewNbTiles = fov * 2 + 1;
-  const { width, data } = level;
+  const { width, height, data } = level;
   const { width: canvasWidth, height: canvasHeight } = offscreen;
   const tileSize = Math.trunc(
     Math.min(canvasHeight / viewNbTiles, canvasWidth / viewNbTiles)
   );
   const [vx, vy] = computeCoords(position, width);
-  const anchorTop = Math.max(vy - fov, 0);
-  const anchorLeft = Math.max(vx - fov, 0);
+  const anchorTop = Math.min(Math.max(vy - fov, 0), height - viewNbTiles);
+  const anchorLeft = Math.min(Math.max(vx - fov, 0), width - viewNbTiles);
 
   new Array(viewNbTiles * viewNbTiles).fill(undefined).forEach(function (_, i) {
     const [x, y] = computeCoords(i, viewNbTiles);

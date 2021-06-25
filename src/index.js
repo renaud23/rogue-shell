@@ -3,6 +3,8 @@ import ReactDom from "react-dom";
 import { Console, Canvas } from "./components";
 import { interpreter, activate, createLevel } from "./game";
 import levelRenderer from "./components/level-view-renderer";
+import QUEUE from "./game/player-queue";
+import { moveUp, moveDown, moveLeft, moveRight } from "./game/commands";
 
 const MAZE_SIZE = 11;
 const TILE_SIZE = 32;
@@ -29,6 +31,35 @@ function startLoop(w, appendRows) {
       on = false;
     }
   }, 50);
+}
+
+function onKeyUp(e) {
+  const { key } = e;
+  switch (key) {
+    case "ArrowUp":
+      e.stopPropagation();
+      e.preventDefault();
+      QUEUE.push(moveUp, 1);
+
+      break;
+    case "ArrowDown":
+      e.stopPropagation();
+      e.preventDefault();
+      QUEUE.push(moveDown, 1);
+      break;
+    case "ArrowLeft":
+      e.stopPropagation();
+      e.preventDefault();
+      QUEUE.push(moveLeft, 1);
+      break;
+    case "ArrowRight":
+      e.stopPropagation();
+      e.preventDefault();
+      QUEUE.push(moveRight, 1);
+      break;
+
+    default:
+  }
 }
 
 function App() {
@@ -67,7 +98,7 @@ function App() {
   );
 
   return (
-    <div className="application">
+    <div className="application" onKeyUp={onKeyUp}>
       <Canvas
         width={VIEW_SIZE * SCALE}
         height={VIEW_SIZE * SCALE}

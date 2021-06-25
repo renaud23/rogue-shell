@@ -17,23 +17,26 @@ export function moveUp(world, log) {
   return false;
 }
 
-export function moveEast(world, log) {
+export function moveRight(world, log) {
   const { player, level } = world;
   const { view } = player;
   const { position } = view;
   const { width, data } = level;
   const next = position + 1;
 
-  if (next % width < width - 2 && !DUNGEON_TILES.isEastWall(data[position])) {
+  if (
+    position % width < width - 1 &&
+    !DUNGEON_TILES.isEastWall(data[position])
+  ) {
     world.player.view.position = next;
-    log(["Vous avancez vers l'est'."]);
+    log(["Vous avancez vers l'est."]);
     return true;
   }
   log(["Impossible d'aller plus loin."]);
   return false;
 }
 
-export function moveWest(world, log) {
+export function moveLeft(world, log) {
   const { player, level } = world;
   const { view } = player;
   const { position } = view;
@@ -42,14 +45,14 @@ export function moveWest(world, log) {
 
   if (next >= 0 && !DUNGEON_TILES.isWestWall(data[position])) {
     world.player.view.position = next;
-    log(["Vous avancez vers l'ouest'."]);
+    log(["Vous avancez vers l'ouest."]);
     return true;
   }
   log(["Impossible d'aller plus loin."]);
   return false;
 }
 
-export function moveSouth(world, log) {
+export function moveDown(world, log) {
   const { player, level } = world;
   const { view } = player;
   const { position } = view;
@@ -61,7 +64,7 @@ export function moveSouth(world, log) {
     !DUNGEON_TILES.isSouthWall(data[position])
   ) {
     world.player.view.position = next;
-    log(["Vous avancez vers le sud'."]);
+    log(["Vous avancez vers le sud."]);
     return true;
   }
   log(["Impossible d'aller plus loin."]);
@@ -82,15 +85,15 @@ function move(params) {
   } else if (params["-right"]) {
     const { args } = params["-right"];
     const [how] = args;
-    batchCommand(moveEast, how);
+    batchCommand(moveRight, how);
   } else if (params["-left"]) {
     const { args } = params["-left"];
     const [how] = args;
-    batchCommand(moveWest, how);
+    batchCommand(moveLeft, how);
   } else if (params["-down"]) {
     const { args } = params["-down"];
     const [how] = args;
-    batchCommand(moveSouth, how);
+    batchCommand(moveDown, how);
   }
   return 200;
 }
