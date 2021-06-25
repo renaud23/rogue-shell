@@ -1,6 +1,20 @@
-import { TEXTURE_WALL, getTextCoords } from "./render-tools";
+import { TEXTURE_WALL, TEXTURE_PLAYER, getTextCoords } from "./render-tools";
 import { DUNGEON_TILES } from "../tools";
 import { computeCoords } from "../tools";
+
+function drawPlayer(offscreen, size, x, y) {
+  offscreen.drawTexture(
+    TEXTURE_PLAYER,
+    0,
+    0,
+    32,
+    32,
+    x * size,
+    y * size,
+    size,
+    size
+  );
+}
 
 function draw(offscreen, tile, size, x, y) {
   const [tx, ty] = getTextCoords(tile);
@@ -39,7 +53,7 @@ function drawTile(offscreen, tile, tileSize, x, y, isNorthEastWall, isPlayer) {
     }
   }
   if (isPlayer) {
-    offscreen.fillRect("red", x * tileSize, y * tileSize, tileSize, tileSize);
+    drawPlayer(offscreen, tileSize, x, y);
   }
   if (isSouth) {
     draw(offscreen, DUNGEON_TILES.SOUTH_WALL, tileSize, x, y);
